@@ -1,9 +1,16 @@
-require 'open-uri'
-require 'digest/md5'
-require "net/http"
-require 'json'
-
 module LjBaiduPush
+  
+  require 'open-uri'
+  require 'digest/md5'
+  require "net/http"
+  require 'json'
+  
+  @api_key = "api_key"
+  @secret_key = "secret_key"
+  
+  class << self
+    attr_accessor :api_key, :secret_key
+  end
   
   #签名
   def self.sign(secret_key, method, url, params)
@@ -16,24 +23,16 @@ module LjBaiduPush
     Digest::MD5.hexdigest(URI::encode_www_form_component(result))
   end
   
-  def self.push_single_device
+  def self.push_single_device(channel_id,message)
     url                       = "http://api.tuisong.baidu.com/rest/3.0/push/single_device"
     uri                       = URI.parse(url)
     http                      = Net::HTTP.new(uri.host,uri.port)
-    params                    = { "apikey" => "rZ8XbPri7PPlB8TpLWGRFsDd", "timestamp" => Time.now.to_i}
-    params["channel_id"]      = "4975304986872672241"
-    message           = {
-      "aps"         => { 
-        "alert"  => "消息测试",
-        "content-available" => '1'
-      },
-      "key1"        => "value1",
-      "key2"        => "value2"
-    }
+    params                    = { "apikey" => @api_key, "timestamp" => Time.now.to_i}
+    params["channel_id"]      = channel_id
 
     params["msg"]           = message.to_json
     params["deploy_status"] = 1
-    sign                      = self.sign("B7hbXYPte9FiyAawaa6LnAhR8TMM2mAl", "POST", url, params)
+    sign                      = self.sign(@secret_key, "POST", url, params)
     params["sign"]            = sign
     req                       = Net::HTTP::Post.new(uri)
     req.set_form_data(params)
@@ -42,3 +41,16 @@ module LjBaiduPush
     response                  = http.request(req)
   end
 end
+
+# LjBaiduPush.api_key = "rZ8XbPri7PPlB8TpLWGRFsDd"
+# LjBaiduPush.secret_key = "B7hbXYPte9FiyAawaa6LnAhR8TMM2mAl"
+
+# message           = {
+#   "aps"         => {
+#     "alert"  => "消息测试",
+#     "content-available" => '1'
+#   },
+#   "key1"        => "value1",
+#   "key2"        => "value2"
+# }
+# LjBaiduPush.push_single_device("4975304986872672241",message)
