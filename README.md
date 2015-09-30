@@ -22,7 +22,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+LjBaiduPush.api_key = "rZ8XbPri7PPlB8TpLWGRFsDd"
+LjBaiduPush.secret_key = "f2a8f68c4c31cfae879f04e669ce164b"
+
+#apple
+message           = {
+  "aps"         => {
+    "alert"  => "消息测试",
+    "content-available" => '1'
+  },
+  "key1"        => "value1",
+  "key2"        => "value2"
+}
+LjBaiduPush.push_single_device(channel_id,message)
 
 ## Development
 

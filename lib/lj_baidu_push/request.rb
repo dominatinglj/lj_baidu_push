@@ -41,16 +41,3 @@ module LjBaiduPush
     response                  = http.request(req)
   end
 end
-
-# LjBaiduPush.api_key = "rZ8XbPri7PPlB8TpLWGRFsDd"
-# LjBaiduPush.secret_key = "B7hbXYPte9FiyAawaa6LnAhR8TMM2mAl"
-
-# message           = {
-#   "aps"         => {
-#     "alert"  => "消息测试",
-#     "content-available" => '1'
-#   },
-#   "key1"        => "value1",
-#   "key2"        => "value2"
-# }
-# LjBaiduPush.push_single_device("4975304986872672241",message)
